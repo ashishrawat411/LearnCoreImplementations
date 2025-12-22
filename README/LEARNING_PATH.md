@@ -21,9 +21,9 @@ A curated progression through 15 data structure and algorithm problems from the 
 #### 1. Key-Value Store Implementation
 **Reference:** Problem #15 from interview guide  
 **Difficulty:** ⭐  
-**Core Concepts:** Dictionary/HashMap basics, CRUD operations, REST API fundamentals  
-**Skills:** API design, dependency injection, Repository pattern  
-**Prerequisites:** None  
+**Core Concepts:** Dictionary/HashMap basics, CRUD operations, REST API fundamentals
+**Skills:** API design, dependency injection, Repository pattern
+**Prerequisites:** None
 **Estimated Time:** 3-4 hours
 
 **What You'll Learn:**
