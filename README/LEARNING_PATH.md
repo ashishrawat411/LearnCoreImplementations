@@ -14,16 +14,18 @@ A curated progression through 15 data structure and algorithm problems from the 
 
 ---
 
-## 📚 Problems Ordered by Difficulty
+## 📚 Problems Ordered by Concept (Grouped Learning Path)
 
-### 🟢 EASY - Foundations (Problems 1-4)
+### 🔵 TRACK 1: Storage Systems (Master Data Storage Progressively)
+
+Build a complete understanding of data storage from simple to complex, culminating in a full database.
 
 #### 1. Key-Value Store Implementation
 **Reference:** Problem #15 from interview guide  
-**Difficulty:** ⭐  
-**Core Concepts:** Dictionary/HashMap basics, CRUD operations, REST API fundamentals
-**Skills:** API design, dependency injection, Repository pattern
-**Prerequisites:** None
+**Difficulty:** ⭐ Easy  
+**Core Concepts:** Dictionary/HashMap basics, CRUD operations, REST API fundamentals  
+**Skills:** API design, dependency injection, Repository pattern  
+**Prerequisites:** None  
 **Estimated Time:** 3-4 hours
 
 **What You'll Learn:**
@@ -31,62 +33,13 @@ A curated progression through 15 data structure and algorithm problems from the 
 - RESTful CRUD endpoint design
 - Repository pattern for data access abstraction
 - Unit testing with xUnit
+- Thread safety with ConcurrentDictionary
 
 ---
 
-#### 2. Dependency Version Check
-**Reference:** Problem #7 from interview guide  
-**Difficulty:** ⭐  
-**Core Concepts:** String parsing, tuple comparison, version semantics  
-**Skills:** Parsing algorithms, comparison logic, validation  
-**Prerequisites:** None  
-**Estimated Time:** 2-3 hours
-
-**What You'll Learn:**
-- String manipulation and parsing techniques
-- Custom comparison logic implementation
-- Input validation patterns
-- Edge case handling (leading zeros, missing segments)
-
----
-
-#### 3. IPv4 Address Iterator
-**Reference:** Problem #14 from interview guide  
-**Difficulty:** ⭐  
-**Core Concepts:** CIDR notation, bit manipulation, iteration patterns  
-**Skills:** Bitwise operations, IP address handling, iterator design  
-**Prerequisites:** Basic understanding of binary representation  
-**Estimated Time:** 3-4 hours
-
-**What You'll Learn:**
-- Bit manipulation techniques
-- CIDR block calculations
-- Iterator pattern implementation
-- IP address validation
-
----
-
-#### 4. Resumable Iterator
-**Reference:** Problem #4 from interview guide  
-**Difficulty:** ⭐  
-**Core Concepts:** State management, cursor-based iteration, serialization  
-**Skills:** Memento pattern, state persistence, iterator protocol  
-**Prerequisites:** Understanding of iteration concepts  
-**Estimated Time:** 4-5 hours
-
-**What You'll Learn:**
-- State pattern and Memento pattern
-- Cursor-based navigation
-- State serialization/deserialization
-- Async iterator extensions
-
----
-
-### 🟡 MEDIUM - Building Complexity (Problems 5-9)
-
-#### 5. Time-Based Key-Value Store
+#### 2. Time-Based Key-Value Store
 **Reference:** Problem #1 from interview guide  
-**Difficulty:** ⭐⭐  
+**Difficulty:** ⭐⭐ Medium  
 **Core Concepts:** Binary search, sorted data structures, temporal queries  
 **Skills:** Search algorithms, time-series data, thread safety  
 **Prerequisites:** Problem #1 (basic KV store)  
@@ -101,16 +54,16 @@ A curated progression through 15 data structure and algorithm problems from the 
 - Binary search on sorted collections
 - SortedList vs List<T> trade-offs
 - Lock-based synchronization
-- File persistence for time-series data
+- Multiple values per key management
 
 ---
 
-#### 6. KV Store Serialize/Deserialize
+#### 3. KV Store Serialize/Deserialize
 **Reference:** Problem #2 from interview guide  
-**Difficulty:** ⭐⭐  
+**Difficulty:** ⭐⭐ Medium  
 **Core Concepts:** Binary serialization, length-prefixing, protocol design  
 **Skills:** BinaryWriter/Reader, encoding schemes, protocol compatibility  
-**Prerequisites:** Problems #1 and #5 (storage foundations)  
+**Prerequisites:** Problems #1 and #2 (storage foundations)  
 **Estimated Time:** 4-5 hours
 
 **What You'll Build On:**
@@ -121,11 +74,87 @@ A curated progression through 15 data structure and algorithm problems from the 
 - Length-prefix encoding technique
 - Binary I/O in .NET
 - Protocol design considerations
-- Redis protocol compatibility basics
+- File persistence for time-series data
 
 ---
 
-#### 7. Unix CD Command
+#### 4. In-Memory Database with SQL
+**Reference:** Problem #3 from interview guide  
+**Difficulty:** ⭐⭐⭐ Advanced  
+**Core Concepts:** SQL parsing, query execution, indexes, multi-table operations  
+**Skills:** Parser design, query optimization, JOIN algorithms  
+**Prerequisites:** Problems #1, #2, #3 (storage mastery)  
+**Estimated Time:** 10-12 hours
+
+**What You'll Build On:**
+- Combines all storage concepts learned so far
+- Most complex storage integration problem
+
+**What You'll Learn:**
+- Recursive descent parser for SQL
+- Query execution engine design
+- WHERE clause evaluation with predicates
+- ORDER BY with IComparer
+- JOIN algorithms (nested loop, hash join)
+- Index design for performance
+
+---
+
+### 🟢 TRACK 2: Parsing & String Manipulation
+
+#### 5. Dependency Version Check
+**Reference:** Problem #7 from interview guide  
+**Difficulty:** ⭐ Easy  
+**Core Concepts:** String parsing, tuple comparison, version semantics  
+**Skills:** Parsing algorithms, comparison logic, validation  
+**Prerequisites:** None  
+**Estimated Time:** 2-3 hours
+
+**What You'll Learn:**
+- String manipulation and parsing techniques
+- Custom comparison logic implementation
+- Input validation patterns
+- Edge case handling (leading zeros, missing segments)
+
+---
+
+### 🟡 TRACK 3: Iteration Patterns
+
+#### 6. IPv4 Address Iterator
+**Reference:** Problem #14 from interview guide  
+**Difficulty:** ⭐ Easy  
+**Core Concepts:** CIDR notation, bit manipulation, iteration patterns  
+**Skills:** Bitwise operations, IP address handling, iterator design  
+**Prerequisites:** Basic understanding of binary representation  
+**Estimated Time:** 3-4 hours
+
+**What You'll Learn:**
+- Bit manipulation techniques
+- CIDR block calculations
+- Iterator pattern implementation
+- IP address validation
+
+---
+
+#### 7. Resumable Iterator
+**Reference:** Problem #4 from interview guide  
+**Difficulty:** ⭐ Easy  
+**Core Concepts:** State management, cursor-based iteration, serialization  
+**Skills:** Memento pattern, state persistence, iterator protocol  
+**Prerequisites:** Understanding of iteration concepts (Problem #6)  
+**Estimated Time:** 4-5 hours
+
+**What You'll Learn:**
+- State pattern and Memento pattern
+- Cursor-based navigation
+- State serialization/deserialization
+- Resume/pause functionality
+
+---
+
+### 🟠 TRACK 4: State Management & Navigation
+
+#### 8. Unix CD Command
 **Reference:** Problem #5 from interview guide  
 **Difficulty:** ⭐⭐  
 **Core Concepts:** Stack-based navigation, cycle detection, path resolution  
@@ -168,6 +197,47 @@ A curated progression through 15 data structure and algorithm problems from the 
 **Skills:** Graph algorithms, topological sort, Observer pattern  
 **Prerequisites:** Graph basics (BFS/DFS)  
 **Estimated Time:** 6-8 hours
+Medium  
+**Core Concepts:** Stack-based navigation, cycle detection, path resolution  
+**Skills:** Graph traversal, symlink handling, loop detection  
+**Prerequisites:** Problem #7 (state management)  
+**Estimated Time:** 5-6 hours
+
+**What You'll Build On:**
+- More complex state management than resumable iterator
+- Introduces graph concepts (symlinks as edges)
+
+**What You'll Learn:**
+- Stack-based path resolution
+- Cycle detection with visited sets
+- Canonical path normalization
+- Symlink resolution algorithms
+
+---
+
+### 🟣 TRACK 5: Resource Management & Scheduling
+
+#### 9mated Time:**Medium  
+**Core Concepts:** Priority queues, FIFO with expiration, resource management  
+**Skills:** Heap data structures, time-based operations, event ordering  
+**Prerequisites:** Understanding of heaps/priority queues  
+**Estimated Time:** 5-7 hours
+
+**What You'll Learn:**
+- PriorityQueue<T> in .NET 6+
+- FIFO queue with expiration policies
+- Time-based resource allocation
+- Event interleaving and ordering
+
+---
+
+### 🔴 TRACK 6: Dependencies & Graph Algorithms
+
+#### 10 Concepts:**Medium  
+**Core Concepts:** Dependency graphs, DFS traversal, cycle detection, caching  
+**Skills:** Graph algorithms, topological sort, Observer pattern  
+**Prerequisites:** Graph basics (Problem #8)  
+**Estimated Time:** 6-8 hours
 
 **What You'll Learn:**
 - Dependency graph construction
@@ -178,11 +248,11 @@ A curated progression through 15 data structure and algorithm problems from the 
 
 ---
 
-### 🟠 ADVANCED - Concurrency & Integration (Problems 10-13)
-
-#### 10. Multithreaded Web Crawler
-**Reference:** Problem #8 from interview guide  
-**Difficulty:** ⭐⭐⭐  
+#### 11. Node Counting in Tree
+**Reference:** Problem #11 from interview guide  
+**Difficulty:** ⭐⭐⭐ Advanced  
+**Core Concepts:** Async/await, recursive aggregation, message passing  
+**Skills:** Async reAdvanced  
 **Core Concepts:** Multithreading, deduplication, rate limiting, concurrent collections  
 **Skills:** Producer-Consumer pattern, thread pools, synchronization  
 **Prerequisites:** Understanding of threading and locks  
@@ -197,86 +267,7 @@ A curated progression through 15 data structure and algorithm problems from the 
 
 ---
 
-#### 11. Node Counting in Tree
-**Reference:** Problem #11 from interview guide  
-**Difficulty:** ⭐⭐⭐  
-**Core Concepts:** Async/await, recursive aggregation, message passing  
-**Skills:** Async recursion, Task composition, timeout handling  
-**Prerequisites:** Understanding of async/await and Tasks  
-**Estimated Time:** 6-8 hours
-
-**What You'll Learn:**
-- Async recursive algorithms
-- Task.WhenAll for parallel aggregation
-- CancellationToken for timeouts
-- Async message passing patterns
-- Error handling in async trees
-
----
-
-#### 12. In-Memory Database with SQL
-**Reference:** Problem #3 from interview guide  
-**Difficulty:** ⭐⭐⭐  
-**Core Concepts:** SQL parsing, query execution, indexes, multi-table operations  
-**Skills:** Parser design, query optimization, JOIN algorithms  
-**Prerequisites:** Problems #1, #5 (storage), parsing experience  
-**Estimated Time:** 10-12 hours
-
-**What You'll Build On:**
-- Combines storage, parsing, filtering, and sorting
-- Most complex integration problem so far
-
-**What You'll Learn:**
-- Recursive descent parser for SQL
-- Query execution engine design
-- WHERE clause evaluation with predicates
-- ORDER BY with IComparer
-- JOIN algorithms (nested loop, hash join)
-- Index design for performance
-
----
-
-#### 13. Toy Language Type System
-**Reference:** Problem #13 from interview guide  
-**Difficulty:** ⭐⭐⭐  
-**Core Concepts:** Type inference, AST traversal, constraint solving  
-**Skills:** Compiler design, type checking, Visitor pattern  
-**Prerequisites:** Understanding of parsers and compilers  
-**Estimated Time:** 10-15 hours
-
-**What You'll Learn:**
-- Abstract Syntax Tree (AST) design
-- Hindley-Milner type inference basics
-- Visitor pattern for AST traversal
-- Type unification algorithm
-- Generic type handling
-- Compiler error reporting
-
----
-
-### 🔴 EXPERT - Distributed Systems (Problems 14-15)
-
-#### 14. Async Training Job Manager
-**Reference:** Problem #10 from interview guide  
-**Difficulty:** ⭐⭐⭐⭐  
-**Core Concepts:** Job scheduling, resource quotas, priority management, OOM handling  
-**Skills:** Heap-based scheduling, worker pools, fault tolerance  
-**Prerequisites:** Problems #8 (concurrency), #9 (priority queues), #11 (async)  
-**Estimated Time:** 12-15 hours
-
-**What You'll Build On:**
-- Combines priority queues (#8), concurrency (#10), and async (#11)
-- Most complex orchestration problem
-
-**What You'll Learn:**
-- Multi-priority job scheduling
-- Resource quota enforcement
-- Out-of-memory (OOM) detection and rollback
-- Worker pool management
-- Starvation prevention algorithms
-- Background job status tracking API
-
----
+#### 13
 
 #### 15. Model Training Pipeline
 **Reference:** Problem #12 from interview guide  
@@ -337,122 +328,166 @@ A curated progression through 15 data structure and algorithm problems from the 
 | Tue | #3, #4 | Iteration patterns | 7-9 |
 | Wed | #5 | Time-based queries + Binary search | 5-6 |
 | Thu | #6 | Serialization + I/O | 4-5 |
-| Fri | #7 | Path navigation + Graphs intro | 5-6 |
-| Sat | #8 | Priority queues + Resources | 5-7 |
-| Sun | #9 | Dependencies + DFS | 6-8 |
+| Fri | #7 | Path navExpert  
+**Core Concepts:** Job scheduling, resource quotas, priority management, OOM handling  
+**Skills:** Heap-based sche (New Grouped Order)
 
-**Week 2 - Advanced & Expert**
+| # | Problem | Track | Difficulty | Key Patterns | Est. Hours |
+|---|---------|-------|-----------|--------------|-----------|
+| 1 | Key-Value Store | Storage | ⭐ | Repository | 3-4 |
+| 2 | Time-Based KV Store | Storage | ⭐⭐ | Repository | 5-6 |
+| 3 | KV Serialization | Storage | ⭐⭐ | Strategy | 4-5 |
+| 4 | In-Memory SQL DB | Storage | ⭐⭐⭐ | Repository, Strategy | 10-12 |
+| 5 | Version Check | Parsing | ⭐ | Strategy | 2-3 |
+| 6 | IPv4 Iterator | Iteration | ⭐ | Iterator | 3-4 |
+| 7 | Resumable Iterator | Iteration | ⭐ | Memento, State | 4-5 |
+| 8 | Unix CD | State/Nav | ⭐⭐ | State | 5-6 |
+| 9 | GPU Credits | Resources | ⭐⭐ | Strategy | 5-7 |
+| 10 | Spreadsheet | Dependencies | ⭐⭐ | Observer, Visitor | 6-8 |
+| 11 | Node Counting | Dependencies | ⭐⭐⭐ | Composite | 6-8 |
+| 12 | Web Crawler | Concurrency | ⭐⭐⭐ | Producer-Consumer | 8-10 |
+| 13 | Job Manager | Concurrency | ⭐⭐⭐⭐ | Command, Strategy | 12-15 |
+| 14 | Training Pipeline | Distributed | ⭐⭐⭐⭐ | Saga, CQRS | 15-20 |
+| 15 | Type System | Specialized | ⭐⭐⭐ | Visitor | 10-15 |
 
-| Day | Problems | Focus | Hours |
-|-----|----------|-------|-------|
-| Mon | #10 | Multithreading + Concurrency | 8-10 |
-| Tue | #11 | Async patterns | 6-8 |
-| Wed | #12 | SQL parsing (core only) | 6-8 |
-| Thu | #13 OR #14 | Choose based on interest | 8-10 |
-| Fri | #14 OR #15 | Job scheduling (core) | 8-10 |
-| Sat | #15 | Streaming pipeline (core) | 8-10 |
-| Sun | Review | Add follow-ups, refactor | 4-6 |
+**Total:** ~110-140 hours
 
----
+**Learning Path Philosophy:** Problems are now grouped by concept/track, allowing you to master one domain before moving to the next. This supports deeper understanding and better retention.rt  
+**Core Concepts:** Streaming data, checkpointing, log aggregation, fault tolerance  
+**Skills:** Distributed systems, consistency, partial failure recovery  
+**Prerequisites:** Problems #11 (async), #12 (concurrency), #13 (job management)  
+**Estimated Time:** 15-20 hours - Grouped by Track
 
-### Option B: 4-Week Balanced (Part-Time, 20 hrs/week)
+**Week 1 - Storage, Parsing, & Iteration Mastery**
 
-**Week 1: Foundations**
-- Mon-Tue: Problem #1 (3-4 hrs)
-- Wed: Problem #2 (2-3 hrs)
-- Thu-Fri: Problem #3 (3-4 hrs)
-- Sat-Sun: Problem #4 (4-5 hrs)
+| Day | Problems | Focus Track | Hours |
+|-----|----------|-------------|-------|
+| Mon | #1 | Storage: Basic KV Store | 3-4 |
+| Mon-Tue | #2 | Storage: Time-Based KV | 5-6 |
+| Wed | #3 | Storage: Serialization | 4-5 |
+| Thu | #5 | Parsing: Version Check | 2-3 |
+| Thu-Fri | #6, #7 | Iteration: IPv4 & Resumable | 7-9 |
+| Sat | #8 | State: Unix CD | 5-6 |
+| Sun | #9 | Resources: GPU Credits | 5-7 |
 
-**Week 2: Medium Complexity**
-- Mon-Tue: Problem #5 (5-6 hrs)
-- Wed-Thu: Problem #6 (4-5 hrs)
-- Fri-Sat: Problem #7 (5-6 hrs)
-- Sun: Buffer/Review
+**Week 2 - Dependencies, Concurrency & Integration**
 
-**Week 3: Medium-Advanced**
-- Mon-Tue: Problem #8 (5-7 hrs)
-- Wed-Sun: Problem #9 (6-8 hrs)
-- Weekend: Problem #10 start (4-5 hrs)
+| Day | Problems | Focus Track | Hours |
+|-----|----------|-------------|-------|
+| Mon | #10 | Dependencies: Spreadsheet | 6-8 |
+| Tue | #11 | Dependencies: Node Counting | 6-8 |
+| Wed-Thu | #4 | Storage: SQL Database | 10-12 |
+| Fri | #12 | Concurrency: Web Crawler | 8-10 |
+| Sat | #13 | Concurrency: Job Manager (core) | 8-10 |
+| Sun | #14 | Distributed: Training Pipeline (core) | 8-10 compilers  
+**Estimated Time:** 10-15 hours
 
-**Week 4: Advanced Systems**
-- Mon-Wed: Problem #10 finish (4-5 hrs)
-- Thu-Fri: Problem #11 (6-8 hrs)
-- Sat-Sun: Problem #12 core OR #14 core (6-8 hrs)
+**What You'll Learn:**
+- Abstract Syntax Tree (AST) design
+- Hindley-Milner type inference basics
+- Visitor pattern for AST traversal
+- Type unification algorithm - Track Focused
+
+**Week 1: Storage Systems Track**
+- Mon-Tue: Problem #1 - Basic KV Store (3-4 hrs)
+- Wed-Thu: Problem #2 - Time-Based KV (5-6 hrs)
+- Fri-Sat: Problem #3 - Serialization (4-5 hrs)
+- Sun: Review & Documentation (2 hrs)
+
+**Week 2: Parsing, Iteration, State Tracks**
+- Mon: Problem #5 - Version Check (2-3 hrs)
+- Tue-Wed: Problem #6 - IPv4 Iterator (3-4 hrs)
+- Thu-Fri: Problem #7 - Resumable Iterator (4-5 hrs)
+- Sat-Sun: Problem #8 - Unix CD (5-6 hrs)
+
+**Week 3: Resources, Dependencies Tracks**
+- Mon-Tue: Problem #9 - GPU Credits (5-7 hrs)
+- Wed-Fri: Problem #10 - Spreadsheet (6-8 hrs)
+- Sat-Sun: Problem #11 - Node Counting (6-8 hrs)
+
+**Week 4: Storage Integration & Concurrency**
+- Mon-Wed: Problem #4 - SQL Database core (10-12 hrs)
+- Thu-Sun: Problem #12 - Web Crawler (8-10 hrs)
 
 **Optional Week 5-6: Expert Level**
-- Continue with Problems #12-15 as time permits
+- Week 5: Problem #13 - Job Manager
+- Week 6: Problem #14 - Training Pipeline
 
 ---
 
-### Option C: 8-Week Deep Dive (10 hrs/week)
+## 🎓 Learning Milestones - Track Mastery
 
 Perfect for working professionals who want thorough understanding.
 
-| Week | Problems | Focus Area |
-|------|----------|------------|
-| 1 | #1, #2 | Storage & Parsing fundamentals |
-| 2 | #3, #4 | Iteration patterns & State |
-| 3 | #5, #6 | Time-series & Serialization |
-| 4 | #7, #8 | Navigation & Resources |
-| 5 | #9, #10 | Dependencies & Concurrency |
-| 6 | #11, #12 | Async & SQL integration |
-| 7 | #13 OR #14 | Specialization (choose one) |
-| 8 | #15 | Distributed systems capstone |
-
----
-
-## 🎓 Learning Milestones
-
-After completing each tier, you should be comfortable with:
-
-**After Foundations (Problems 1-4):**
-- ✅ Building REST APIs in .NET Core
-- ✅ Repository pattern and dependency injection
-- ✅ Basic data structures (Dictionary, List)
-- ✅ State management patterns
-- ✅ Unit testing with xUnit
-
-**After Medium Tier (Problems 5-9):**
-- ✅ Search algorithms (binary search)
-- ✅ Graph algorithms (DFS, cycle detection)
+| Week | Problems | Focus Track |
+|------|----------|-------------|
+| 1 | #1, #2 | Storage Track: Basic + Time-Based KV |
+| 2 | #3, #5 | Storage + Parsing: Serialization + Version Check |
+| 3 | #6, #7 | Iteration Track: IPv4 + Resumable Iterator |
+| 4 | #8, #9 | State + Resources: Unix CD + GPU Credits |
+| 5 | #10, #11 | Dependencies Track: Spreadsheet + Node Counting |
+| 6 | #4 | Storage Integration: SQL Database |
+| 7 | #12, #13 | Concurrency Track: Web Crawler + Job Manager |
+| 8 | #14, #15 (optional) | Distributed + Specializedon)
 - ✅ Priority queues and heaps
 - ✅ Observer pattern
 - ✅ Serialization techniques
 
 **After Advanced Tier (Problems 10-13):**
+- ✅ Multithreading and sy (Track-Based)
+
+After completing each track, you should be comfortable with:
+
+**After Storage Track (Problems 1-4):**
+- ✅ Building REST APIs in .NET Core
+- ✅ Repository pattern and dependency injection
+- ✅ Hash maps, sorted collections, and binary search
+- ✅ Serialization and persistence
+- ✅ SQL parsing and query execution
+- ✅ Thread safety with ConcurrentDictionary
+
+**After Parsing & Iteration Tracks (Problems 5-7):**
+- ✅ String parsing and validation
+- ✅ Iterator pattern and state management
+- ✅ Bit manipulation
+- ✅ State serialization
+- ✅ Resume/pause functionality
+
+**After State & Resource Tracks (Problems 8-9):**
+- ✅ Stack-based navigation
+- ✅ Priority queues and heaps
+- ✅ Time-based resource management
+- ✅ Cycle detection
+
+**After Dependencies Track (Problems 10-11):**
+- ✅ Dependency graphs and DFS
+- ✅ Observer pattern
+- ✅ Async recursion and Task composition
+- ✅ Topological sorting
+
+**After Concurrency & Distributed Tracks (Problems 12-14):**
 - ✅ Multithreading and synchronization
-- ✅ Async/await patterns
 - ✅ Producer-Consumer pattern
-- ✅ Complex parsing and query engines
-- ✅ Concurrent collections
-
-**After Expert Tier (Problems 14-15):**
-- ✅ Distributed system design
-- ✅ Fault tolerance and recovery
-- ✅ Resource scheduling
+- ✅ Job scheduling and worker pools
 - ✅ Streaming data processing
-- ✅ Production-ready system architecture
-
----
-
-## 💡 Tips for Success
-
-1. **Don't Skip the Easy Ones**: Foundations are critical for API design patterns
-2. **Test Everything**: Write tests before implementation (TDD)
-3. **Document Decisions**: Maintain DESIGN.md for pattern choices
-4. **Refactor Often**: Return to earlier problems with new knowledge
+- ✅ FMaster Each Track**: Complete all problems in a track before moving to next
+2. **Build on Previous Work**: Each track builds conceptual depth progressively
+3. **Test Everything**: Write tests before implementation (TDD)
+4. **Document Decisions**: Maintain DESIGN.md for pattern choices in each project
 5. **Ask Why**: Understand trade-offs, not just implementations
 6. **Build Incrementally**: Start minimal, add complexity in phases
 7. **Use Git**: Commit after each phase (minimal → optimized → concurrent → extended)
-
----
-
-## 📖 Next Steps
-
-Ready to start? Begin with:
+8. **Cross-Reference**: Notice how later problems apply concepts from earlier tracks
+ the **Storage Track**:
 1. Review [PROJECT_GUIDE_FOR_AI.md](PROJECT_GUIDE_FOR_AI.md) for detailed instructions
 2. Set up your development environment (.NET 8 SDK, Visual Studio/VS Code)
 3. Choose a schedule above that fits your availability
-4. Start with Problem #1: Key-Value Store Implementation
+4. **Start with Problem #1: Key-Value Store Implementation**
+5. **Progress through Problems #1 → #2 → #3 → #4** to master storage systems
+6. Move to next track once storage concepts are solid
 
-**Let's build something great! 🚀**
+**Why Start with Storage Track?**
+- Builds foundational API design skills
+- All 15 problems benefit from understanding data storage
+- Progressive complexity within one domain
+- Natural progression: simple → time-based → persistent → queryable
