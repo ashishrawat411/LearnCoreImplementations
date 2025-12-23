@@ -25,15 +25,15 @@ namespace KeyValueStore.Api.Controllers
         [HttpPut("{key}")]
         public IActionResult Put(string key, [FromBody] string value)
         {
-            _keyValueStore.Set(key, value);
-            return Ok();
+            var result = _keyValueStore.Set(key, value);
+            return Ok(result);
         }
 
         [HttpDelete("{key}")]
         public IActionResult Delete(string key)
         {
-            _keyValueStore.Delete(key);
-            return Ok();
+            var result = _keyValueStore.Delete(key);
+            return Ok(result);
         }
 
         [HttpGet(Name = "ListAllKeys")]

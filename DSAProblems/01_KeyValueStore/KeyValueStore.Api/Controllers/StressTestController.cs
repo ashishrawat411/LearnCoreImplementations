@@ -24,7 +24,7 @@ namespace KeyValueStore.Api.Controllers
             var lockObj = new object();
 
             // Spawn 100 concurrent tasks that all try to write
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 int taskId = i;
                 var task = Task.Run(() =>

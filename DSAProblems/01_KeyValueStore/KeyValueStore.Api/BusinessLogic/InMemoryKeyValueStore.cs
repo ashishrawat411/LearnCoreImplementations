@@ -1,33 +1,52 @@
+using System.Collections.Concurrent;
+
 namespace KeyValueStore.Api
 {
     public class InMemoryKeyValueStore : IKeyValueStore
     {
-        private readonly Dictionary<string, string> cache = new();
-        public void Delete(string key)
+        private readonly ConcurrentDictionary<string, string> cache = new();
+
+        public bool Delete(string key)
         {
-            if (!cache.ContainsKey(key))
+            if(string.IsNullOrEmpty(key))
             {
-                return;
+                throw new ArgumentNullException(nameof(key));
             }
             
-            cache.Remove(key);
+            if (!cache.ContainsKey(key))
+            {
+                return false;
+            }
+
+            return cache.Remove(key, out string? val);
         }
 
         public string? Get(string key)
         {
+            if(string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             cache.TryGetValue(key, out string? value);
             return value;
         }
 
-        public void Set(string key, string value)
+        public bool Set(string key, string value)
         {
+            if(string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (cache.ContainsKey(key))
             {
                 cache[key] = value;
+                return true;
             }
             else
             {
-                cache.Add(key, value);
+                return cache.TryAdd(key, value);
             }
         }
 
