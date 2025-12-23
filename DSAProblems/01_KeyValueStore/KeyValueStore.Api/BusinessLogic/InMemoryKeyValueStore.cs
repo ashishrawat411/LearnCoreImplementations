@@ -2,26 +2,38 @@ namespace KeyValueStore.Api
 {
     public class InMemoryKeyValueStore : IKeyValueStore
     {
-        private readonly Dictionary<string, string> _store = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> cache = new();
         public void Delete(string key)
         {
-            _store.Remove(key);
+            if (!cache.ContainsKey(key))
+            {
+                return;
+            }
+            
+            cache.Remove(key);
         }
 
         public string? Get(string key)
         {
-            _store.TryGetValue(key, out string? value);
+            cache.TryGetValue(key, out string? value);
             return value;
         }
 
         public void Set(string key, string value)
         {
-            _store.Add(key, value);
+            if (cache.ContainsKey(key))
+            {
+                cache[key] = value;
+            }
+            else
+            {
+                cache.Add(key, value);
+            }
         }
 
-        string?[] IKeyValueStore.List()
+        KeyValuePair<string, string>[] IKeyValueStore.List()
         {
-            return _store.Values.ToArray();
+            return cache.ToArray();
         }
     }
 }
