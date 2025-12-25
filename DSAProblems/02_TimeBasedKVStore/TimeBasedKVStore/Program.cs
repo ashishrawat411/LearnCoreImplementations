@@ -1,5 +1,4 @@
 using TimeBasedKVStore;
-using TimeBasedKVStore.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<ITimeBasedKVStore, InMemoryTimedKVStore>();
+builder.Services.AddSingleton<ISearchStrategy, BinarySearchStrategy>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

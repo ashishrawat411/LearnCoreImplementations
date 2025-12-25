@@ -1,13 +1,19 @@
 ﻿using System.Collections.Concurrent;
-using TimeBasedKVStore.Interfaces;
+using TimeBasedKVStore;
 
 namespace TimeBasedKVStore
 {
     public class InMemoryTimedKVStore : ITimeBasedKVStore
     {
         private readonly ConcurrentDictionary<string, SortedList<long, string>> cache = new();
+        private readonly ISearchStrategy searchStrategy;
 
-        bool ITimeBasedKVStore.Add(string key, string value)
+        public InMemoryTimedKVStore(ISearchStrategy searchStrategy)
+        {
+            this.searchStrategy = searchStrategy;
+        }
+        
+        public bool Add(string key, string value)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -18,7 +24,7 @@ namespace TimeBasedKVStore
             return result;
         }
 
-        bool ITimeBasedKVStore.AddOrUpdate(string key, KeyValuePair<long, string> value)
+        public bool AddOrUpdate(string key, KeyValuePair<long, string> value)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -29,7 +35,7 @@ namespace TimeBasedKVStore
 
             if (!cache.ContainsKey(key))
             {
-                cache.TryAdd(key, new SortedList<long, string>() { {value.Key, value.Value } });
+                cache.TryAdd(key, new SortedList<long, string>() { { value.Key, value.Value } });
                 result = true;
             }
             else
@@ -41,7 +47,7 @@ namespace TimeBasedKVStore
             return result;
         }
 
-        string ITimeBasedKVStore.Get(string key)
+        public string Get(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -57,7 +63,7 @@ namespace TimeBasedKVStore
             return values.Last().Value;
         }
 
-        bool ITimeBasedKVStore.Remove(string key)
+        public bool Remove(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -65,6 +71,25 @@ namespace TimeBasedKVStore
             }
 
             bool result = cache.TryRemove(key, out _);
+            return result;
+        }
+
+        public string GetValueAtTimestamp(string key, long timestamp)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (!cache.ContainsKey(key))
+            {
+                throw new KeyNotFoundException($"key {key} does not exist in the store.");
+            }
+
+            SortedList<long, string> values = cache[key];
+
+            string result = this.searchStrategy.GetValueAtTimestamp(values, timestamp);
+
             return result;
         }
     }
