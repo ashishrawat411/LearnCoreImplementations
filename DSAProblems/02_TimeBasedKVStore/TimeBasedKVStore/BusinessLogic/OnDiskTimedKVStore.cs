@@ -10,6 +10,12 @@ namespace TimeBasedKVStore.BusinessLogic
         private readonly ISearchStrategy searchStrategy;
         private readonly ISerializer<ConcurrentDictionary<string, SortedList<long, string>>> serializer;
         private ConcurrentDictionary<string, SortedList<long, string>> cache;
+        
+        // Per-key locks to protect SortedList modifications
+        private readonly ConcurrentDictionary<string, object> keyLocks = new();
+        
+        // Lock for file serialization to prevent concurrent writes
+        private readonly object fileLock = new();
 
         public OnDiskTimedKVStore(ISearchStrategy searchStrategy,
             ISerializer<ConcurrentDictionary<string, SortedList<long, string>>> serializer,
@@ -30,33 +36,32 @@ namespace TimeBasedKVStore.BusinessLogic
 
         public bool AddOrUpdate(string key, KeyValuePair<long, string> value)
         {
-            bool result = false;
-            try
+            // Get or create lock for this specific key
+            var lockObj = keyLocks.GetOrAdd(key, _ => new object());
+            
+            // Lock per key (not global) - allows concurrent updates to different keys
+            lock (lockObj)
             {
-                // AddOrUpdate is atomic and thread-safe
-                // Parameters:
-                //   key: the dictionary key
-                //   addValueFactory: called when key doesn't exist - creates new SortedList with our timestamp-value
-                //   updateValueFactory: called when key exists - adds timestamp-value to existing SortedList
+                // AddOrUpdate is atomic for dictionary operations
+                // But we need lock to protect SortedList modifications
                 this.cache.AddOrUpdate(
                     key,
                     (k) => new SortedList<long, string> { { value.Key, value.Value } },
                     (k, values) =>
                     {
-                        values.Add(value.Key, value.Value);
+                        // Use indexer for add-or-update behavior (not Add which throws on duplicate)
+                        values[value.Key] = value.Value;
                         return values;
                     });
 
-                // Persist to disk after in-memory update
-                this.serializer.Serialize(this.cache);
-                result = true;
-            }
-            catch 
-            {
-                throw;
+                // Lock file writes to prevent concurrent serialization corruption
+                lock (fileLock)
+                {
+                    this.serializer.Serialize(this.cache);
+                }
             }
 
-            return result;
+            return true;
         }
 
         public string Get(string key)
