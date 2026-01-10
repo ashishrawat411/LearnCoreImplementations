@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TimeBasedKVStore.Interfaces;
 
 namespace TimeBasedKVStore.Controllers
 {
@@ -42,11 +43,6 @@ namespace TimeBasedKVStore.Controllers
             return result != null ? Ok(result) : NotFound(key);
         }
 
-        [HttpGet("{key}/{timestamp}")]
-        public ActionResult GetAtTimeStamp(string key, long timestamp)
-        {
-            var result = timeBasedKVStore.GetValueAtTimestamp(key, timestamp);
-            return result != null ? Ok(result) : NotFound();
-        }
+        
     }
 }
