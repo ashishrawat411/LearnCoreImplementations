@@ -14,33 +14,78 @@ namespace WebCrawler.BusinessLogic;
 /// </summary>
 public class SingleThreadedCrawler : IWebCrawler
 {
-    public async Task<List<string>> CrawlAsync(
+    public Task<List<string>> CrawlAsync(
         string startUrl, 
         IHtmlParser htmlParser, 
         int? maxDepth = null, 
         int? maxUrls = null)
     {
-        // TODO: IMPLEMENT THIS METHOD
-        // 
-        // HINTS:
-        // 1. Extract hostname from startUrl using Uri class
-        // 2. Use Queue<string> for BFS (FIFO - First In First Out)
-        // 3. Use HashSet<string> to track visited URLs (O(1) lookup)
-        // 4. While queue is not empty:
-        //    - Dequeue a URL
-        //    - Call htmlParser.GetUrls(url) to get linked URLs
-        //    - Filter URLs by hostname (only keep same hostname)
-        //    - Add unvisited URLs to queue
-        //    - Mark URLs as visited
-        // 5. Return all visited URLs
-        //
-        // QUESTIONS TO CONSIDER:
-        // - How do you extract hostname from "http://news.yahoo.com/page"?
-        // - Why use HashSet instead of List for visited tracking?
-        // - What happens if there's a cycle in the graph?
-        // - How would you add maxDepth support?
+        // Extract hostname from start URL
+        var targetHostname = GetHostname(startUrl);
+        if (string.IsNullOrEmpty(targetHostname))
+        {
+            return Task.FromResult(new List<string>());
+        }
 
-        throw new NotImplementedException("TODO: Implement single-threaded BFS crawler");
+        // Initialize data structures for BFS
+        var visited = new HashSet<string>();
+        var queue = new Queue<(string url, int depth)>();
+        
+        // Start BFS with the initial URL at depth 0
+        queue.Enqueue((startUrl, 0));
+        visited.Add(startUrl);
+
+        // BFS traversal
+        while (queue.Count > 0)
+        {
+            // Check if we've reached the max URLs limit
+            if (maxUrls.HasValue && visited.Count >= maxUrls.Value)
+            {
+                break;
+            }
+
+            var (currentUrl, currentDepth) = queue.Dequeue();
+
+            // Check if we've reached the max depth limit
+            if (maxDepth.HasValue && currentDepth >= maxDepth.Value)
+            {
+                continue;
+            }
+
+            // Get all URLs from the current page
+            // Note: This is a blocking call, but we're single-threaded so it's fine
+            var linkedUrls = htmlParser.GetUrls(currentUrl);
+
+            // Process each linked URL
+            foreach (var linkedUrl in linkedUrls)
+            {
+                // Check max URLs limit before processing
+                if (maxUrls.HasValue && visited.Count >= maxUrls.Value)
+                {
+                    break;
+                }
+
+                // Skip if already visited
+                if (visited.Contains(linkedUrl))
+                {
+                    continue;
+                }
+
+                // Filter by hostname - only crawl URLs with the same hostname
+                var linkedHostname = GetHostname(linkedUrl);
+                if (linkedHostname != targetHostname)
+                {
+                    continue;
+                }
+
+                // Add to visited and queue
+                visited.Add(linkedUrl);
+                queue.Enqueue((linkedUrl, currentDepth + 1));
+            }
+        }
+
+        // Return all visited URLs as a list
+        return Task.FromResult(visited.ToList());
     }
 
     /// <summary>
@@ -49,8 +94,17 @@ public class SingleThreadedCrawler : IWebCrawler
     /// </summary>
     private static string GetHostname(string url)
     {
-        // TODO: IMPLEMENT THIS
-        // HINT: Use Uri class - new Uri(url).Host
-        throw new NotImplementedException();
+        try
+        {
+            return new Uri(url).Host;
+        }
+        catch (UriFormatException)
+        {
+            return string.Empty;
+        }
+        catch (ArgumentNullException)
+        {
+            return string.Empty;
+        }
     }
 }
