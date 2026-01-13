@@ -87,7 +87,7 @@ public class TinyUrlController : ControllerBase
         
         // 301 Moved Permanently - indicates the redirect is permanent
         // This is the standard for URL shorteners as it can be cached by browsers
-        // Trade-off: Better performance but can't track repeat visits
+        // Trade-off: Better performance but can't track repeat     
         return RedirectPermanent(longUrl);
     }
 

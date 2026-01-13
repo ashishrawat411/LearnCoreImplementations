@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../../04_WebCrawler/WebCrawlerConsole/WebCrawlerConsole.csproj" />
   <Project Path="TimeBasedKVStore.csproj" />
 </Solution>
