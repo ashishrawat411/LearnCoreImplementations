@@ -98,7 +98,11 @@ public class SingleThreadedCrawler : IWebCrawler
         {
             return new Uri(url).Host;
         }
-        catch (Exception)
+        catch (UriFormatException)
+        {
+            return string.Empty;
+        }
+        catch (ArgumentNullException)
         {
             return string.Empty;
         }
