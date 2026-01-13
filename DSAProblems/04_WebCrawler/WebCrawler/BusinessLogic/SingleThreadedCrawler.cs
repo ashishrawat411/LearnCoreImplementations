@@ -14,7 +14,7 @@ namespace WebCrawler.BusinessLogic;
 /// </summary>
 public class SingleThreadedCrawler : IWebCrawler
 {
-    public async Task<List<string>> CrawlAsync(
+    public Task<List<string>> CrawlAsync(
         string startUrl, 
         IHtmlParser htmlParser, 
         int? maxDepth = null, 
@@ -24,7 +24,7 @@ public class SingleThreadedCrawler : IWebCrawler
         var targetHostname = GetHostname(startUrl);
         if (string.IsNullOrEmpty(targetHostname))
         {
-            return new List<string>();
+            return Task.FromResult(new List<string>());
         }
 
         // Initialize data structures for BFS
@@ -54,7 +54,7 @@ public class SingleThreadedCrawler : IWebCrawler
 
             // Get all URLs from the current page
             // Note: This is a blocking call, but we're single-threaded so it's fine
-            var linkedUrls = await Task.Run(() => htmlParser.GetUrls(currentUrl));
+            var linkedUrls = htmlParser.GetUrls(currentUrl);
 
             // Process each linked URL
             foreach (var linkedUrl in linkedUrls)
@@ -85,7 +85,7 @@ public class SingleThreadedCrawler : IWebCrawler
         }
 
         // Return all visited URLs as a list
-        return visited.ToList();
+        return Task.FromResult(visited.ToList());
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class SingleThreadedCrawler : IWebCrawler
         {
             return new Uri(url).Host;
         }
-        catch
+        catch (Exception)
         {
             return string.Empty;
         }
