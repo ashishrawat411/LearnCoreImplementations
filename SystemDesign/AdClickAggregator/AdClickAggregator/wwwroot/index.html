@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Click Aggregator Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1117;
+            color: #e4e4e7;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px 30px;
+            border-bottom: 1px solid #2d2d44;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 { font-size: 22px; color: #60a5fa; }
+        .header .subtitle { font-size: 13px; color: #9ca3af; margin-top: 2px; }
+        .pipeline-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+        }
+        .stat-badge {
+            background: #1e293b;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+        }
+        .stat-badge .value { color: #34d399; font-weight: 700; }
+        .main { display: flex; height: calc(100vh - 70px); }
+        .sidebar {
+            width: 340px;
+            background: #1a1a2e;
+            border-right: 1px solid #2d2d44;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+        .action-card {
+            background: #16213e;
+            border: 1px solid #2d2d44;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .action-card:hover {
+            border-color: #60a5fa;
+            background: #1e293b;
+        }
+        .action-card h3 { font-size: 15px; color: #f1f5f9; margin-bottom: 4px; }
+        .action-card p { font-size: 12px; color: #94a3b8; }
+        .action-card .tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+        .tag-ingest { background: #164e63; color: #22d3ee; }
+        .tag-query { background: #1e3a5f; color: #60a5fa; }
+        .tag-test { background: #3b1f2b; color: #fb7185; }
+        
+        /* Form styles */
+        .form-group { margin-bottom: 12px; }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #e4e4e7;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #3b82f6; }
+        .btn-success { background: #059669; color: white; }
+        .btn-success:hover { background: #10b981; }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #ef4444; }
+
+        /* Results panel */
+        .result-panel {
+            background: #1a1a2e;
+            border: 1px solid #2d2d44;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .result-panel h3 {
+            font-size: 16px;
+            color: #60a5fa;
+            margin-bottom: 12px;
+        }
+        pre {
+            background: #0f172a;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            overflow-x: auto;
+            color: #a5f3fc;
+            line-height: 1.5;
+        }
+        
+        /* Dashboard grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .ad-card {
+            background: #16213e;
+            border: 1px solid #2d2d44;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .ad-card h4 {
+            color: #60a5fa;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .ad-card .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #1e293b;
+            font-size: 13px;
+        }
+        .ad-card .metric .label { color: #94a3b8; }
+        .ad-card .metric .value { color: #34d399; font-weight: 600; }
+        
+        /* Architecture diagram */
+        .arch-diagram {
+            font-family: 'Courier New', monospace;
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #60a5fa;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        
+        .hidden { display: none; }
+        
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: #94a3b8;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>📊 Ad Click Aggregator</h1>
+            <div class="subtitle">System Design — Real-time Stream Processing Pipeline</div>
+        </div>
+        <div class="pipeline-stats" id="pipelineStats">
+            <div class="stat-badge">Processed: <span class="value" id="statProcessed">0</span></div>
+            <div class="stat-badge">Deduped: <span class="value" id="statDeduped">0</span></div>
+            <div class="stat-badge">Pending: <span class="value" id="statPending">0</span></div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="sidebar">
+            <div class="section-title">⚡ Actions</div>
+
+            <!-- Single Click -->
+            <div class="action-card" onclick="showPanel('singleClick')">
+                <h3>Record a Click</h3>
+                <p>Send a single ad click event to the pipeline</p>
+                <span class="tag tag-ingest">INGEST</span>
+            </div>
+
+            <!-- Simulate Batch -->
+            <div class="action-card" onclick="showPanel('simulate')">
+                <h3>Simulate Batch</h3>
+                <p>Generate N random clicks across multiple ads</p>
+                <span class="tag tag-ingest">INGEST</span>
+            </div>
+
+            <!-- Test Dedup -->
+            <div class="action-card" onclick="showPanel('dedup')">
+                <h3>Test Deduplication</h3>
+                <p>Send the same click multiple times to verify dedup</p>
+                <span class="tag tag-test">DEDUP TEST</span>
+            </div>
+
+            <div class="section-title" style="margin-top: 20px">🔍 Query</div>
+
+            <!-- Query Ad -->
+            <div class="action-card" onclick="showPanel('queryAd')">
+                <h3>Query Ad Metrics</h3>
+                <p>Get aggregated clicks for a specific ad</p>
+                <span class="tag tag-query">QUERY</span>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="action-card" onclick="showPanel('dashboard')">
+                <h3>Full Dashboard</h3>
+                <p>View all ads and their aggregated metrics</p>
+                <span class="tag tag-query">QUERY</span>
+            </div>
+
+            <div class="section-title" style="margin-top: 20px">📐 Architecture</div>
+
+            <div class="action-card" onclick="showPanel('architecture')">
+                <h3>View Architecture</h3>
+                <p>See how data flows through the pipeline</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Single Click Panel -->
+            <div id="panel-singleClick" class="result-panel">
+                <h3>📝 Record a Single Click</h3>
+                <div class="form-group">
+                    <label>Ad ID</label>
+                    <input type="text" id="clickAdId" value="ad_meta_feed" placeholder="e.g., ad_meta_feed">
+                </div>
+                <div class="form-group">
+                    <label>User ID (optional)</label>
+                    <input type="text" id="clickUserId" placeholder="auto-generated if empty">
+                </div>
+                <button class="btn btn-primary" onclick="recordClick()">Send Click →</button>
+                <pre id="clickResult" style="margin-top: 12px" class="hidden"></pre>
+            </div>
+
+            <!-- Simulate Panel -->
+            <div id="panel-simulate" class="result-panel hidden">
+                <h3>🚀 Simulate Batch Clicks</h3>
+                <div class="form-group">
+                    <label>Number of clicks</label>
+                    <input type="number" id="simCount" value="100" min="1" max="10000">
+                </div>
+                <div class="form-group">
+                    <label>Unique users</label>
+                    <input type="number" id="simUsers" value="50" min="1" max="1000">
+                </div>
+                <div class="form-group">
+                    <label>Ad IDs (comma-separated)</label>
+                    <input type="text" id="simAdIds" value="ad_meta_feed, ad_instagram_story, ad_reels_mid">
+                </div>
+                <button class="btn btn-success" onclick="simulateClicks()">Simulate Clicks →</button>
+                <pre id="simResult" style="margin-top: 12px" class="hidden"></pre>
+            </div>
+
+            <!-- Dedup Panel -->
+            <div id="panel-dedup" class="result-panel hidden">
+                <h3>🔁 Test Deduplication</h3>
+                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">
+                    Sends the SAME click ID multiple times. Only the first should be counted.
+                </p>
+                <div class="form-group">
+                    <label>Click ID (same for all sends)</label>
+                    <input type="text" id="dedupClickId" value="test_dup_click_001">
+                </div>
+                <div class="form-group">
+                    <label>Ad ID</label>
+                    <input type="text" id="dedupAdId" value="ad_meta_feed">
+                </div>
+                <div class="form-group">
+                    <label>How many times to send</label>
+                    <input type="number" id="dedupTimes" value="5" min="2" max="20">
+                </div>
+                <button class="btn btn-danger" onclick="testDedup()">Send Duplicates →</button>
+                <pre id="dedupResult" style="margin-top: 12px" class="hidden"></pre>
+            </div>
+
+            <!-- Query Ad Panel -->
+            <div id="panel-queryAd" class="result-panel hidden">
+                <h3>🔎 Query Ad Metrics</h3>
+                <div class="form-group">
+                    <label>Ad ID</label>
+                    <input type="text" id="queryAdId" value="ad_meta_feed">
+                </div>
+                <div class="form-group">
+                    <label>Window Size</label>
+                    <select id="queryWindow">
+                        <option value="OneMinute">1 Minute</option>
+                        <option value="OneHour">1 Hour</option>
+                        <option value="OneDay">1 Day</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Last N minutes</label>
+                    <input type="number" id="queryMinutes" value="60" min="1">
+                </div>
+                <button class="btn btn-primary" onclick="queryAd()">Query →</button>
+                <pre id="queryResult" style="margin-top: 12px" class="hidden"></pre>
+            </div>
+
+            <!-- Dashboard Panel -->
+            <div id="panel-dashboard" class="result-panel hidden">
+                <h3>📊 Aggregation Dashboard</h3>
+                <div class="tab-bar">
+                    <div class="tab active" onclick="loadDashboard('OneMinute', this)">Per Minute</div>
+                    <div class="tab" onclick="loadDashboard('OneHour', this)">Per Hour</div>
+                    <div class="tab" onclick="loadDashboard('OneDay', this)">Per Day</div>
+                </div>
+                <div id="dashboardGrid" class="dashboard-grid"></div>
+                <pre id="dashboardRaw" style="margin-top: 12px" class="hidden"></pre>
+            </div>
+
+            <!-- Architecture Panel -->
+            <div id="panel-architecture" class="result-panel hidden">
+                <h3>🏗️ System Architecture</h3>
+                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+                    This is the exact data flow implemented in this project, mapped to Meta's real infrastructure.
+                </p>
+                <div class="arch-diagram">
+User clicks ad           Our Code                        Meta Production
+─────────────           ────────                        ───────────────
+
+  Browser        →   POST /api/AdClick/click         Ad Server → Scribe
+      │                       │
+      ▼                       ▼
+ API Controller     Channel&lt;AdClickEvent&gt;            Kafka / Scribe
+  (Producer)         (bounded, backpressure)          (partitioned by ad_id)
+      │                       │
+      ▼                       ▼
+                   ClickAggregatorProcessor          Flink / Stylus
+                    (BackgroundService)               (stream processor)
+                            │
+                    ┌───────┴───────┐
+                    ▼               ▼
+               Dedup Check    Aggregate into          Bloom Filter + 
+            (ConcurrentDict)   time windows           Gorilla/TAO
+                    │        ┌──────┼──────┐
+                    │        ▼      ▼      ▼
+                    │     1-min  1-hour  1-day         Multiple granularities
+                    │     bucket bucket bucket
+                    │        │      │      │
+                    ▼        ▼      ▼      ▼
+              GET /api/AdClick/query/{adId}           GraphQL API for
+              GET /api/AdClick/dashboard              Ads Manager dashboard
+                </div>
+
+                <div style="margin-top: 16px;">
+                    <h4 style="color: #60a5fa; margin-bottom: 8px;">🎯 Key Interview Points</h4>
+                    <div style="font-size: 13px; color: #d1d5db; line-height: 1.8;">
+                        <strong style="color: #34d399;">1. Why tumbling windows?</strong> Fixed, non-overlapping. Each click in exactly ONE bucket. No double-counting.<br>
+                        <strong style="color: #34d399;">2. Why dedup before aggregate?</strong> At-least-once delivery is easier than exactly-once. Dedup at processor level.<br>
+                        <strong style="color: #34d399;">3. Why pre-aggregate?</strong> Query is O(1) lookup instead of O(N) scan over raw events.<br>
+                        <strong style="color: #34d399;">4. Why partition by ad_id?</strong> All clicks for same ad → same processor. Zero coordination needed.<br>
+                        <strong style="color: #34d399;">5. Why multiple granularities?</strong> Write amplification (3x) but ANY time-range query is fast.<br>
+                        <strong style="color: #34d399;">6. Why Channel&lt;T&gt;?</strong> Bounded = backpressure. Async = non-blocking. Thread-safe = no locks.<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== UI LOGIC ====================
+
+        function showPanel(name) {
+            document.querySelectorAll('.content > .result-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`panel-${name}`).classList.remove('hidden');
+        }
+
+        // ==================== API CALLS ====================
+
+        async function recordClick() {
+            const adId = document.getElementById('clickAdId').value;
+            const userId = document.getElementById('clickUserId').value;
+            const body = { adId };
+            if (userId) body.userId = userId;
+
+            const res = await fetch('/api/AdClick/click', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            const el = document.getElementById('clickResult');
+            el.textContent = JSON.stringify(data, null, 2);
+            el.classList.remove('hidden');
+            refreshStats();
+        }
+
+        async function simulateClicks() {
+            const count = parseInt(document.getElementById('simCount').value);
+            const uniqueUsers = parseInt(document.getElementById('simUsers').value);
+            const adIdsStr = document.getElementById('simAdIds').value;
+            const adIds = adIdsStr.split(',').map(s => s.trim()).filter(s => s);
+
+            const res = await fetch('/api/AdClick/simulate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ count, uniqueUsers, adIds })
+            });
+            const data = await res.json();
+            const el = document.getElementById('simResult');
+            el.textContent = JSON.stringify(data, null, 2);
+            el.classList.remove('hidden');
+            refreshStats();
+        }
+
+        async function testDedup() {
+            const clickId = document.getElementById('dedupClickId').value;
+            const adId = document.getElementById('dedupAdId').value;
+            const times = parseInt(document.getElementById('dedupTimes').value);
+
+            const res = await fetch('/api/AdClick/simulate-duplicate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clickId, adId, times })
+            });
+            const data = await res.json();
+            const el = document.getElementById('dedupResult');
+            el.textContent = JSON.stringify(data, null, 2);
+            el.classList.remove('hidden');
+            refreshStats();
+        }
+
+        async function queryAd() {
+            const adId = document.getElementById('queryAdId').value;
+            const window = document.getElementById('queryWindow').value;
+            const lastMinutes = document.getElementById('queryMinutes').value;
+
+            const res = await fetch(`/api/AdClick/query/${adId}?window=${window}&lastMinutes=${lastMinutes}`);
+            const data = await res.json();
+            const el = document.getElementById('queryResult');
+            el.textContent = JSON.stringify(data, null, 2);
+            el.classList.remove('hidden');
+        }
+
+        async function loadDashboard(window, tabEl) {
+            // Update tab styles
+            if (tabEl) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tabEl.classList.add('active');
+            }
+
+            const res = await fetch(`/api/AdClick/dashboard?window=${window}`);
+            const data = await res.json();
+
+            const grid = document.getElementById('dashboardGrid');
+            const raw = document.getElementById('dashboardRaw');
+
+            if (!data.ads || data.ads.length === 0) {
+                grid.innerHTML = '<p style="color: #94a3b8; grid-column: 1/-1;">No data yet. Simulate some clicks first!</p>';
+                raw.classList.add('hidden');
+                return;
+            }
+
+            grid.innerHTML = data.ads.map(ad => `
+                <div class="ad-card">
+                    <h4>${ad.adId}</h4>
+                    <div class="metric">
+                        <span class="label">Total Clicks</span>
+                        <span class="value">${ad.totalClicks.toLocaleString()}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Unique Users</span>
+                        <span class="value">${ad.totalUniqueUsers.toLocaleString()}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Windows</span>
+                        <span class="value">${ad.windows.length}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            raw.textContent = JSON.stringify(data, null, 2);
+            raw.classList.remove('hidden');
+        }
+
+        // ==================== STATS REFRESH ====================
+
+        async function refreshStats() {
+            try {
+                // Small delay to let the processor catch up
+                await new Promise(r => setTimeout(r, 300));
+                
+                const res = await fetch('/api/AdClick/stats');
+                const data = await res.json();
+                document.getElementById('statProcessed').textContent = data.pipeline.totalProcessed.toLocaleString();
+                document.getElementById('statDeduped').textContent = data.pipeline.totalDeduplicated.toLocaleString();
+                document.getElementById('statPending').textContent = data.pipeline.pendingInStream.toLocaleString();
+            } catch (e) {
+                console.error('Failed to refresh stats:', e);
+            }
+        }
+
+        // Auto-refresh stats every 2 seconds
+        setInterval(refreshStats, 2000);
+        refreshStats();
+
+        // Show the first panel by default
+        showPanel('singleClick');
+    </script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../Inmemorydatabase.Tests/Inmemorydatabase.Tests.csproj" />
+  <Project Path="InMemoryDatabase.csproj" />
+</Solution>
